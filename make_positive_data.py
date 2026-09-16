@@ -38,12 +38,12 @@ from make_address_insertion.make_address_text3 import (
 REFERS = ["aicc", "gpt", "qwen3"]
 ADD_TYPES = ["single", "double", "split"]
 
-DATA_IDX = 3
+DATA_IDX = 2
 SEED = 2 #7
 
-ONELINE_REPEAT_PER_TEMPLATE = 2000
-TRIPLE_REPEAT_PER_TEMPLATE = 4
-QUADRA_REPEAT_PER_TEMPLATE = 4
+ONELINE_REPEAT_PER_TEMPLATE = 1000
+TRIPLE_REPEAT_PER_TEMPLATE = 3
+QUADRA_REPEAT_PER_TEMPLATE = 3
 
 TRIPLE_GROUPS = ["A", "B", "C"]
 QUADRA_GROUPS = ["A", "B", "C", "D"]
