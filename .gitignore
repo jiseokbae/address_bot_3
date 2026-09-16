@@ -6,7 +6,12 @@
 /data_for_scenario/aicc_data/
 
 
-inference/
+/inference/first_poc/
+/inference/output/
+/inference/output_2
+/inference/result/
+/inference/result_2/
+/inference/second_poc_2/
 
 /make_address_insertion/data/
 
