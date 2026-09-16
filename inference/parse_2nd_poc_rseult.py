@@ -13,6 +13,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from paths import (
     SECOND_POC_GT_CSV,
+    SECOND_POC_RUN_ID,
     second_poc_output_dir,
     second_poc_result_dir,
 )
@@ -20,8 +21,7 @@ from paths import (
 # =========================================
 # config
 # =========================================
-DIR_IDX = "2"
-
+DIR_IDX = SECOND_POC_RUN_ID
 RESULT_DIR = second_poc_result_dir(DIR_IDX)
 
 GT_CSV_PATH = SECOND_POC_GT_CSV

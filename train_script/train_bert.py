@@ -29,21 +29,6 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from paths import resolve_project_path
 
-cfg = load_yaml(args.config)
-cfg = resolve_yaml_templates(cfg)
-
-cfg["data"]["dir"] = str(
-    resolve_project_path(cfg["data"]["dir"])
-)
-
-cfg["data"]["negative_path"] = str(
-    resolve_project_path(cfg["data"]["negative_path"])
-)
-
-cfg["output"]["output_dir"] = str(
-    resolve_project_path(cfg["output"]["output_dir"])
-)
-
 # =========================================================
 # utils
 # =========================================================
@@ -427,6 +412,19 @@ def main():
     args = parse_args()
     cfg = load_yaml(args.config)
     cfg = resolve_yaml_templates(cfg)
+
+    # project root 기준으로 상대경로 변환
+    cfg["data"]["dir"] = str(
+        resolve_project_path(cfg["data"]["dir"])
+    )
+
+    cfg["data"]["negative_path"] = str(
+        resolve_project_path(cfg["data"]["negative_path"])
+    )
+
+    cfg["output"]["output_dir"] = str(
+        resolve_project_path(cfg["output"]["output_dir"])
+    )
 
     # =========================================================
     # config

@@ -17,6 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from paths import (
     SECOND_POC_GT_CSV,
+    SECOND_POC_RUN_ID,
     second_poc_output_dir,
     train_output_dir,
 )
@@ -615,8 +616,7 @@ def infer_one_tc(
 # Main
 # =========================================================
 if __name__ == "__main__":
-    DIR_IDX = "2"
-
+    DIR_IDX = SECOND_POC_RUN_ID
 
     poc_path = SECOND_POC_GT_CSV
     out_dir = second_poc_output_dir(DIR_IDX)
@@ -629,46 +629,45 @@ if __name__ == "__main__":
             for TRI in [3, 4]:
                 for QUAD in [3, 4]:
                     for IDX in [1, 2, 3]:
-                        for CKPT in [13932, 16344]:
-                            MODEL_DIR = (
-                                train_output_dir(ONE, TRI, QUAD, IDX)
-                                / f"checkpoint-{CKPT}"
+                        MODEL_DIR = (
+                            train_output_dir(ONE, TRI, QUAD, IDX)
+                            / f"best_model"
+                        )
+
+                        if not os.path.isdir(MODEL_DIR):
+                            print(f"[SKIP] model dir not found: {MODEL_DIR}")
+                            continue
+
+                        print(f"[LOAD] {MODEL_DIR}")
+
+                        tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, use_fast=True)
+                        model = AutoModelForTokenClassification.from_pretrained(MODEL_DIR)
+                        model.eval()
+
+                        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                        model.to(device)
+
+                        results = []
+
+                        for sample in tqdm(tc_inputs, desc=f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}"):
+                            result = infer_one_tc(
+                                sample=sample,
+                                tokenizer=tokenizer,
+                                model=model,
+                                id2label=model.config.id2label,
                             )
+                            results.append(result)
 
-                            if not os.path.isdir(MODEL_DIR):
-                                print(f"[SKIP] model dir not found: {MODEL_DIR}")
-                                continue
+                        out_path = out_dir / (
+                            f"poc_inference_results_turn_decoded_"
+                            f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                        )
 
-                            print(f"[LOAD] {MODEL_DIR}")
+                        save_json(results, str(out_path))
+                        print(f"[SAVED] {out_path}")
 
-                            tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, use_fast=True)
-                            model = AutoModelForTokenClassification.from_pretrained(MODEL_DIR)
-                            model.eval()
+                        del model
+                        del tokenizer
 
-                            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-                            model.to(device)
-
-                            results = []
-
-                            for sample in tqdm(tc_inputs, desc=f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}"):
-                                result = infer_one_tc(
-                                    sample=sample,
-                                    tokenizer=tokenizer,
-                                    model=model,
-                                    id2label=model.config.id2label,
-                                )
-                                results.append(result)
-
-                            out_path = out_dir / (
-                                f"poc_inference_results_turn_decoded_"
-                                f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
-                            )
-
-                            save_json(results, str(out_path))
-                            print(f"[SAVED] {out_path}")
-
-                            del model
-                            del tokenizer
-
-                            if torch.cuda.is_available():
-                                torch.cuda.empty_cache()
+                        if torch.cuda.is_available():
+                            torch.cuda.empty_cache()

@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from paths import (
     SECOND_POC_GT_CSV,
+    SECOND_POC_RUN_ID,
     second_poc_output_dir,
     second_poc_result_dir,
 )
@@ -905,10 +906,8 @@ def main(
 
 from pathlib import Path
 if __name__ == "__main__":
-    # DIR_IDX = "2"
-    # DIR_IDX = "2-2"
-    DIR_IDX = "2-3"
-
+    DIR_IDX = SECOND_POC_RUN_ID
+    
     out_dir = second_poc_result_dir(DIR_IDX)
     out_dir.mkdir(parents=True, exist_ok=True)
 
