@@ -6,6 +6,12 @@ from typing import Any, Dict, List, Tuple
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+from paths import (
+    ADDRESS_DATA_DIR,
+    IXI_MODEL_DIR,
+    generated_data_dir,
+    train_data_dir,
+)
 
 # =========================================================
 # config
@@ -17,7 +23,7 @@ bert = "klue"
 if bert == "klue":
     bert_path = "klue/roberta-large"
 elif bert == "uplus":
-    bert_path = "/data/private/address_bot/models/ixi-RoBERTa-base_250203"
+    bert_path = str(IXI_MODEL_DIR)
 else:
     raise ValueError(f"Invalid BERT name: {bert}")
 
@@ -26,69 +32,85 @@ ONELINE_REPEAT_PER_TEMPLATE = 2000
 TRIPLE_REPEAT_PER_TEMPLATE = 4
 QUADRA_REPEAT_PER_TEMPLATE = 4
 
+DATA_DIR = generated_data_dir(
+    ONELINE_REPEAT_PER_TEMPLATE,
+    TRIPLE_REPEAT_PER_TEMPLATE,
+    QUADRA_REPEAT_PER_TEMPLATE,
+    DATA_IDX,
+)
 
-DATA_DIR = f"/data/private/address_bot_3/make_address_insertion/data/oneline{ONELINE_REPEAT_PER_TEMPLATE}_triple{TRIPLE_REPEAT_PER_TEMPLATE}_quadra{QUADRA_REPEAT_PER_TEMPLATE}_dataidx{DATA_IDX}"
-NEGATIV_DIR = "/data/private/address_bot_3/make_address_insertion/data"
+NEGATIVE_DIR = ADDRESS_DATA_DIR
 
 
 NEGATIVE_GROUPED_PATH = (
-    f"{NEGATIV_DIR}/final_negative_dataset_addr0_dedup_thinned.json"
+    NEGATIVE_DIR
+    / "final_negative_dataset_addr0_dedup_thinned.json"
 )
 
-
 POSITIVE_GROUPED_PATH = (
-    f"{DATA_DIR}/"
-    f"final_positive_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
+    DATA_DIR
+    / f"final_positive_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
 )
 
 TRIPLE_GROUPED_PATH = (
-    f"{DATA_DIR}/"
-    f"final_triple_dataset_{TRIPLE_REPEAT_PER_TEMPLATE}.json"
+    DATA_DIR
+    / f"final_triple_dataset_{TRIPLE_REPEAT_PER_TEMPLATE}.json"
 )
 
 QUADRA_GROUPED_PATH = (
-    f"{DATA_DIR}/"
-    f"final_quadra_dataset_{QUADRA_REPEAT_PER_TEMPLATE}.json"
+    DATA_DIR
+    / f"final_quadra_dataset_{QUADRA_REPEAT_PER_TEMPLATE}.json"
 )
 
 ONELINE_SINGLE_GROUPED_PATH = (
-    f"{DATA_DIR}/"
-    f"final_oneline_single_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
+    DATA_DIR
+    / f"final_oneline_single_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
 )
 
 ONELINE_SPLIT_GROUPED_PATH = (
-    f"{DATA_DIR}/"
-    f"final_oneline_split_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
+    DATA_DIR
+    / f"final_oneline_split_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
 )
 
 
-SAVE_DIR = f"train_data/oneline{ONELINE_REPEAT_PER_TEMPLATE}_triple{TRIPLE_REPEAT_PER_TEMPLATE}_quadra{QUADRA_REPEAT_PER_TEMPLATE}_dataidx{DATA_IDX}"
-os.makedirs(SAVE_DIR, exist_ok=True)
+SAVE_DIR = train_data_dir(
+    ONELINE_REPEAT_PER_TEMPLATE,
+    TRIPLE_REPEAT_PER_TEMPLATE,
+    QUADRA_REPEAT_PER_TEMPLATE,
+    DATA_IDX,
+)
+
+SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
 SAVE_POSITIVE_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_positive_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_positive_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
 )
 
 SAVE_NEGATIVE_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_negative_addr0.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_negative_addr0.pkl"
 )
 
 SAVE_TRIPLE_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_triple_{TRIPLE_REPEAT_PER_TEMPLATE}.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_triple_{TRIPLE_REPEAT_PER_TEMPLATE}.pkl"
 )
 
 SAVE_QUADRA_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_quadra_{QUADRA_REPEAT_PER_TEMPLATE}.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_quadra_{QUADRA_REPEAT_PER_TEMPLATE}.pkl"
 )
 
 SAVE_ONELINE_SINGLE_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_oneline_single_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_oneline_single_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
 )
 
 SAVE_ONELINE_SPLIT_PATH = (
-    f"{SAVE_DIR}/{bert}_bert_token_cls_oneline_split_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
+    SAVE_DIR
+    / f"{bert}_bert_token_cls_oneline_split_{ONELINE_REPEAT_PER_TEMPLATE}.pkl"
 )
-
 
 MAX_LENGTH = 512
 

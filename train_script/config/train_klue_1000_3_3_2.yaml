@@ -7,12 +7,12 @@ vars:
   dataidx: 2
 
 data:
-  dir: "/data/private/address_bot_3/train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
-  negative_path: "/data/private/address_bot_3/train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}/klue_bert_token_cls_negative_addr0.pkl"
+  dir: "train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
+  negative_path: "train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}/klue_bert_token_cls_negative_addr0.pkl"
 
 output:
-  output_dir: "./outputs_token_cls_klue/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
-
+  output_dir: "train_script/outputs_token_cls_klue/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
+  
 train:
   seed: 42
   val_ratio: 0.05

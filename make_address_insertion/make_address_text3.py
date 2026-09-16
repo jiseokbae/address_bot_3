@@ -1,6 +1,14 @@
 import json
 import re
+import sys
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import PROCESSED_DIR
 
 sido = [
     'busan', 'chungbuk', 'chungnam', 'daegu', 'daejeon', 'gangwon',
@@ -444,7 +452,7 @@ def generate_road_addresses(item: dict):
 
 
 def make_jibun(region):
-    data_path = "/data/private/address_bot/processed/jibun_" + region + ".json"
+    data_path = PROCESSED_DIR / f"jibun_{region}.json"
     data = read_json(data_path)
 
     out = []
@@ -454,7 +462,7 @@ def make_jibun(region):
 
 
 def make_road(region):
-    data_path = "/data/private/address_bot_3/processed/road_" + region + ".json"
+    data_path = PROCESSED_DIR / f"road_{region}.json"
     data = read_json(data_path)
 
     out = []

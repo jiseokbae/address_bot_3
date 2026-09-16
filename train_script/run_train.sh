@@ -2,6 +2,8 @@
 
 set -e
 
-CONFIG_PATH=${1:-config/train_klue_1000_3_3_2.yaml}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-python train_bert.py --config "$CONFIG_PATH"
+CONFIG_PATH=${1:-"$SCRIPT_DIR/config/train_klue_1000_3_3_2.yaml"}
+
+python "$SCRIPT_DIR/train_bert.py" --config "$CONFIG_PATH"

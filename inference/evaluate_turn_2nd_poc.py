@@ -5,12 +5,23 @@ import sys
 import os
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import (
+    SECOND_POC_GT_CSV,
+    second_poc_output_dir,
+    second_poc_result_dir,
+)
 
 # =========================================
 # config
 # =========================================
-GT_CSV_PATH = "/data/private/address_bot_3/inference/second_poc/(최종)2차PoC_신규TC_주소NER_정답지_260522.csv"
+GT_CSV_PATH = SECOND_POC_GT_CSV
 
 GT_ID_KEY = "TC_No"
 GT_NER_KEY = "NER_NORMALIZED_GT"
@@ -898,7 +909,7 @@ if __name__ == "__main__":
     # DIR_IDX = "2-2"
     DIR_IDX = "2-3"
 
-    out_dir = Path(f"result_{DIR_IDX}")
+    out_dir = second_poc_result_dir(DIR_IDX)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     for MODEL_TYPE in ["klue"]:
@@ -907,21 +918,28 @@ if __name__ == "__main__":
                 for QUAD in [3, 4]:
                     for IDX in [1, 2, 3]:
                         PRED_JSON_PATH = (
-                            f"/data/private/address_bot_3/inference/output_{DIR_IDX}/"
-                            f"poc_inference_results_turn_decoded_"
-                            f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            second_poc_output_dir(DIR_IDX)
+                            / (
+                                "poc_inference_results_turn_decoded_"
+                                f"{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            )
                         )
-
+                        
                         SAVE_TAG_TABLE_JSON = (
-                            f"result_{DIR_IDX}/tag_table_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
-                        )
-                        SAVE_SUMMARY_JSON = (
-                            f"result_{DIR_IDX}/summary_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
-                        )
-                        SAVE_ROW_ERRORS_JSON = (
-                            f"result_{DIR_IDX}/row_errors_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            out_dir
+                            / f"tag_table_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
                         )
 
+                        SAVE_SUMMARY_JSON = (
+                            out_dir
+                            / f"summary_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                        )
+
+                        SAVE_ROW_ERRORS_JSON = (
+                            out_dir
+                            / f"row_errors_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                        )
+                        
                         try:
                             main(
                                 PRED_JSON_PATH,

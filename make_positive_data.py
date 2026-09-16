@@ -7,6 +7,8 @@ from typing import Any, Dict, List
 
 from tqdm import tqdm
 
+from paths import TEMPLATE_DIR, generated_data_dir
+
 from make_address_insertion.make_insertion_address import (
     compose_address_from_db_row,
     compose_full_address_from_db_row,
@@ -815,11 +817,17 @@ def build_quadra_dataset(template_path, seed=7):
 
 if __name__ == "__main__":
     start_time = time.time()
-    DATA_DIR = f"/data/private/address_bot_3/make_address_insertion/data/oneline{ONELINE_REPEAT_PER_TEMPLATE}_triple{TRIPLE_REPEAT_PER_TEMPLATE}_quadra{QUADRA_REPEAT_PER_TEMPLATE}_dataidx{DATA_IDX}"
 
-    os.makedirs(DATA_DIR, exist_ok=True)
+    DATA_DIR = generated_data_dir(
+        ONELINE_REPEAT_PER_TEMPLATE,
+        TRIPLE_REPEAT_PER_TEMPLATE,
+        QUADRA_REPEAT_PER_TEMPLATE,
+        DATA_IDX,
+    )
 
-    template_path = "/data/private/address_bot_3/make_address_insertion/data/template/text_template.json"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    template_path = TEMPLATE_DIR / "text_template.json"
     save_path = (
         f"{DATA_DIR}/"
         f"final_positive_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
@@ -835,7 +843,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    triple_path = "/data/private/address_bot_3/make_address_insertion/data/template/text_template_triple.json"
+    triple_path = TEMPLATE_DIR / "text_template_triple.json"
     triple_save_path = (
         f"{DATA_DIR}/"
         f"final_triple_dataset_{TRIPLE_REPEAT_PER_TEMPLATE}.json"
@@ -851,7 +859,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    quadra_path = "/data/private/address_bot_3/make_address_insertion/data/template/text_template_quadra.json"
+    quadra_path = TEMPLATE_DIR / "text_template_quadra.json"
     quadra_save_path = (
         f"{DATA_DIR}/"
         f"final_quadra_dataset_{QUADRA_REPEAT_PER_TEMPLATE}.json"
@@ -867,7 +875,9 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    oneline_template_path = "/data/private/address_bot_3/make_address_insertion/data/template/text_template_oneline_single.json"
+    oneline_template_path = (
+        TEMPLATE_DIR / "text_template_oneline_single.json"
+    )
     oneline_save_path = (
         f"{DATA_DIR}/"
         f"final_oneline_single_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"
@@ -883,7 +893,9 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    oneline_split_template_path = "/data/private/address_bot_3/make_address_insertion/data/template/text_template_oneline_split.json"
+    oneline_split_template_path = (
+        TEMPLATE_DIR / "text_template_oneline_split.json"
+    )
     oneline_split_save_path = (
         f"{DATA_DIR}/"
         f"final_oneline_split_dataset_{ONELINE_REPEAT_PER_TEMPLATE}.json"

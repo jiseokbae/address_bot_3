@@ -2,13 +2,24 @@ import csv
 import json
 import os
 import re
-from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
 import torch
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForTokenClassification
+import sys
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import (
+    SECOND_POC_GT_CSV,
+    second_poc_output_dir,
+    train_output_dir,
+)
 
 # =========================================================
 # Config
@@ -607,8 +618,8 @@ if __name__ == "__main__":
     DIR_IDX = "2"
 
 
-    poc_path = "/data/private/address_bot_3/inference/second_poc/(최종)2차PoC_신규TC_주소NER_정답지_260522.csv"
-    out_dir = Path(f"/data/private/address_bot_3/inference/output_{DIR_IDX}")
+    poc_path = SECOND_POC_GT_CSV
+    out_dir = second_poc_output_dir(DIR_IDX)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     tc_inputs = poc_GT_to_inputs(poc_path)
@@ -620,10 +631,8 @@ if __name__ == "__main__":
                     for IDX in [1, 2, 3]:
                         for CKPT in [13932, 16344]:
                             MODEL_DIR = (
-                                f"/data/private/address_bot_3/train_script/"
-                                f"outputs_token_cls_klue/"
-                                # f"oneline{ONE}_triple{TRI}_quadra{QUAD}_dataidx{IDX}/best_model"
-                                f"oneline{ONE}_triple{TRI}_quadra{QUAD}_dataidx{IDX}/checkpoint-{CKPT}"
+                                train_output_dir(ONE, TRI, QUAD, IDX)
+                                / f"checkpoint-{CKPT}"
                             )
 
                             if not os.path.isdir(MODEL_DIR):

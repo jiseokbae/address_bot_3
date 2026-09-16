@@ -9,11 +9,20 @@ from typing import Any, Dict, List, Tuple
 # Path config
 # =========================================================
 
-INPUT_PATH = "/data/private/address_bot_3/make_address_insertion/data/final_negative_dataset_addr0.json"
+INPUT_PATH = (
+    ADDRESS_DATA_DIR
+    / "final_negative_dataset_addr0.json"
+)
 
-OUTPUT_PATH = "/data/private/address_bot_3/make_address_insertion/data/final_negative_dataset_addr0_dedup_thinned.json"
+OUTPUT_PATH = (
+    ADDRESS_DATA_DIR
+    / "final_negative_dataset_addr0_dedup_thinned.json"
+)
 
-REPORT_PATH = "/data/private/address_bot_3/make_address_insertion/data/final_negative_dataset_addr0_dedup_thinned_report.txt"
+REPORT_PATH = (
+    ADDRESS_DATA_DIR
+    / "final_negative_dataset_addr0_dedup_thinned_report.txt"
+)
 
 SOURCE_KEY = "aicc"
 DATASET_KEY = "negative"

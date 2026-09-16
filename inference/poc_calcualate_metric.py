@@ -3,12 +3,24 @@ import json
 import re
 import sys
 from collections import defaultdict, Counter
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import (
+    FIRST_POC_GT_CSV,
+    FIRST_POC_OUTPUT_DIR,
+    FIRST_POC_RESULT_DIR,
+)
 
 # =========================================
 # config
 # =========================================
-GT_CSV_PATH = "/data/private/address_bot_3/inference/first_poc/260327_주소봇_1차PoC_NER_GT.csv"
-
+GT_CSV_PATH = FIRST_POC_GT_CSV
 
 GT_ID_KEY = "TC ID"
 GT_NER_KEY = "NER_NORMALIZED_GT"
@@ -539,16 +551,32 @@ def main(PRED_JSON_PATH, SAVE_TAG_TABLE_JSON, SAVE_SUMMARY_JSON, SAVE_ROW_ERRORS
 
 
 if __name__ == "__main__":
+    FIRST_POC_RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
     for MODEL_TYPE in ["klue"]:#, "uplus"]:
         for ONE in [1000,2000]: 
             for TRI in [3,4]:  
                     for QUAD in [3,4]: 
                         for IDX in [1,2,3]: 
-                            PRED_JSON_PATH = f"/data/private/address_bot_3/inference/output/poc_inference_results_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}_decoded.json"
-                            SAVE_TAG_TABLE_JSON = f"result/tag_table_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
-                            SAVE_SUMMARY_JSON = f"result/summary_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
-                            SAVE_ROW_ERRORS_JSON = f"result/row_errors_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            PRED_JSON_PATH = (
+                                FIRST_POC_OUTPUT_DIR
+                                / f"poc_inference_results_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}_decoded.json"
+                            )
+                            
+                            SAVE_TAG_TABLE_JSON = (
+                                FIRST_POC_RESULT_DIR
+                                / f"tag_table_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            )
+
+                            SAVE_SUMMARY_JSON = (
+                                FIRST_POC_RESULT_DIR
+                                / f"summary_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            )
+
+                            SAVE_ROW_ERRORS_JSON = (
+                                FIRST_POC_RESULT_DIR
+                                / f"row_errors_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                            )
     
                             try:
                     

@@ -5,6 +5,11 @@ from typing import Any, Dict, List
 
 from tqdm import tqdm
 
+from paths import (
+    ADDRESS_DATA_DIR,
+    NEGATIVE_ADDR0_PATH,
+    NEGATIVE_ADDR5PLUS0_PATH,
+)
 
 
 
@@ -288,22 +293,17 @@ def main():
 
 
     SAVE_PATH = (
-        "/data/private/address_bot_3/make_address_insertion/data/"
-        "final_negative_dataset_addr0.json"
+        ADDRESS_DATA_DIR / "final_negative_dataset_addr0.json"
     )
 
     INVALID_SAVE_PATH = (
-        "/data/private/address_bot_3/make_address_insertion/data/"
-        "final_negative_dataset_addr0_invalid.json"
+        ADDRESS_DATA_DIR / "final_negative_dataset_addr0_invalid.json"
     )
 
     start_time = time.time()
 
-
-    # addr0_path = "/data/private/address_bot_3/data_for_scenario/aicc_data/addr0.json"
-    # addr0_path = "/data/private/address_bot_3/data_for_scenario/aicc_data/addr5/addr5plus_0.json"
-    addr0_data = read_json("/data/private/address_bot_3/data_for_scenario/aicc_data/addr0.json")
-    addr0_data += read_json("/data/private/address_bot_3/data_for_scenario/aicc_data/addr5/addr5plus_0.json")
+    addr0_data = read_json(NEGATIVE_ADDR0_PATH)
+    addr0_data += read_json(NEGATIVE_ADDR5PLUS0_PATH)
 
     final_data, invalid, raw_count = build_negative_dataset(addr0_data)
 

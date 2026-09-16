@@ -4,7 +4,19 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 import torch
 import os
 from typing import Dict, List, Any
+import sys
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import (
+    FIRST_POC_INPUT_CSV,
+    FIRST_POC_OUTPUT_DIR,
+    train_output_dir,
+)
 
 def parse_csv(file_path):
     results = []
@@ -189,6 +201,7 @@ def predict_one(
         "token_predictions": token_predictions,
     }
 
+FIRST_POC_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 from tqdm import tqdm
 if __name__ == "__main__":
     for MODEL_TYPE in ["klue"]:#, "uplus"]:
@@ -196,8 +209,10 @@ if __name__ == "__main__":
             for TRI in [3,4]:  
                 for QUAD in [3,4]: 
                     for IDX in [1,2,3]: 
-                        MODEL_DIR = f"/data/private/address_bot_3/train_script/outputs_token_cls_klue/oneline{ONE}_triple{TRI}_quadra{QUAD}_dataidx{IDX}/best_model"
-                        
+                        MODEL_DIR = (
+                            train_output_dir(ONE, TRI, QUAD, IDX)
+                            / "best_model"
+                        )
                         if not os.path.isdir(MODEL_DIR):
                             continue
                         tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, use_fast=True)
@@ -207,8 +222,11 @@ if __name__ == "__main__":
                         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                         model.to(device)
 
-                        poc_path = "/data/private/address_bot/parse_for_itn/ADDRESS_BOT_TC.csv"
-                        out_path = f"output/poc_inference_results_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                        poc_path = FIRST_POC_INPUT_CSV
+                        out_path = (
+                            FIRST_POC_OUTPUT_DIR
+                            / f"poc_inference_results_{MODEL_TYPE}_{ONE}_{TRI}_{QUAD}_{IDX}.json"
+                        )
                         tc_inputs = poc_GT_to_inputs(poc_path)
 
                         results = []

@@ -19,6 +19,30 @@ from transformers import (
     DataCollatorForTokenClassification,
 )
 
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import resolve_project_path
+
+cfg = load_yaml(args.config)
+cfg = resolve_yaml_templates(cfg)
+
+cfg["data"]["dir"] = str(
+    resolve_project_path(cfg["data"]["dir"])
+)
+
+cfg["data"]["negative_path"] = str(
+    resolve_project_path(cfg["data"]["negative_path"])
+)
+
+cfg["output"]["output_dir"] = str(
+    resolve_project_path(cfg["output"]["output_dir"])
+)
 
 # =========================================================
 # utils

@@ -3,19 +3,30 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 from collections import OrderedDict
+import sys
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from paths import (
+    SECOND_POC_GT_CSV,
+    second_poc_output_dir,
+    second_poc_result_dir,
+)
 
 # =========================================
 # config
 # =========================================
 DIR_IDX = "2"
-RESULT_DIR = Path(f"result_{DIR_IDX}")
 
-GT_CSV_PATH = Path(
-    "/data/private/address_bot_3/inference/second_poc/(최종)2차PoC_신규TC_주소NER_정답지_260522.csv"
-)
+RESULT_DIR = second_poc_result_dir(DIR_IDX)
 
-PRED_DIR = Path(f"/data/private/address_bot_3/inference/output_{DIR_IDX}")
+GT_CSV_PATH = SECOND_POC_GT_CSV
+
+PRED_DIR = second_poc_output_dir(DIR_IDX)
 
 MODEL_TYPES = ["klue"]
 ONES = [1000]
