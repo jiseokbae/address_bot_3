@@ -1,0 +1,19 @@
+# data_for_scenario 내 JSON 파일 제외
+/data_for_scenario/*.json
+
+# 특정 하위 디렉토리 제외
+/data_for_scenario/gpt_data/
+/data_for_scenario/aicc_data/
+
+
+inference/
+
+/make_address_insertion/data/
+
+processed/
+
+/train_script/outputs_token_cls_klue/
+
+
+
+s

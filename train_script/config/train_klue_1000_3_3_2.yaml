@@ -1,0 +1,42 @@
+bert_path: "klue/roberta-large"
+
+vars:
+  oneline: 1000
+  triple: 3
+  quadra: 3
+  dataidx: 2
+
+data:
+  dir: "/data/private/address_bot_3/train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
+  negative_path: "/data/private/address_bot_3/train_data/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}/klue_bert_token_cls_negative_addr0.pkl"
+
+output:
+  output_dir: "./outputs_token_cls_klue/oneline{oneline}_triple{triple}_quadra{quadra}_dataidx{dataidx}"
+
+train:
+  seed: 42
+  val_ratio: 0.05
+
+  train_batch_size: 128
+  eval_batch_size: 128
+  num_epochs: 8
+
+  learning_rate: 3.0e-5
+  lr_scheduler_type: "cosine"
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  logging_steps: 50
+  save_total_limit: 7
+
+loss:
+  o_weight: 0.2
+  other_weight: 1.0
+
+trainer:
+  overwrite_output_dir: true
+  eval_strategy: "epoch"
+  save_strategy: "epoch"
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+  report_to: "none"
